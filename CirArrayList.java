@@ -13,12 +13,11 @@ import java.util.RandomAccess;
  * front of the ArrayList.
  * </p>
  *
- * @author Juan Candelaria Claborne
+ * @author Juan Candelaria Claborne, cssc0247
  */
 public final class CirArrayList<E> extends AbstractList<E> implements
         List<E>, RandomAccess {
     private int currentSize;
-    private int gg;
     private int maxSize;
     private int front;
     private int rear;
@@ -28,23 +27,29 @@ public final class CirArrayList<E> extends AbstractList<E> implements
     private E[] storage;
 
     /**
-     * Builds a new, empty CirArray.CirArrayList.
+     * Builds a new, empty CirArrayList.
      */
     public CirArrayList() {
         storage = new E[DEFAULT_SIZE];
         front = rear = currentSize = 0;
         maxSize = DEFAULT_SIZE;
-
     }
 
     /**
-     * Constructs a new CirArray.CirArrayList containing all the items in the input
+     * Constructs a new CirArrayList containing all the items in the input
      * parameter.
      *
      * @param col the Collection from which to base
      */
     public CirArrayList(Collection<? extends E> col) {
         // todo: collection constructor
+        storage = new E[DEFAULT_SIZE];
+        front = rear = currentSize = 0;
+        maxSize = DEFAULT_SIZE;
+        int i = 0;
+        for(E thing : col){
+            storage[i] = thing;
+        }
     }
 
     /**
@@ -58,10 +63,15 @@ public final class CirArrayList<E> extends AbstractList<E> implements
     @Override
     public E get(int index) {
         // todo: Students must code
-        if (front > rear)
-            if (rear > front)
-                if (rear == front)
-                    return null;
+        if (index >= currentSize || index < 0){
+            throw new IndexOutOfBoundsException;
+            return;
+        }
+        if (front < rear)
+            return storage[front+index];
+        if (rear < front)
+            return storage[(index -1)-(maxSize-1-front)];
+        return null;
     }
 
     /**
@@ -77,10 +87,21 @@ public final class CirArrayList<E> extends AbstractList<E> implements
     @Override
     public E set(int index, E value) {
         // todo: Students must code
-        if (front > rear)
-            if (rear > front)
-                if (rear == front)
-                    return null;
+        if (index >= currentSize || index < 0){
+            throw new IndexOutOfBoundsException;
+            return;
+        }
+        if (front < rear){
+            E item = storage[front+index];
+            storage[front+index] = value;
+            return item;
+        }
+        if (rear < front){
+            E item = storage[(index -1)-(maxSize-1-front)];
+            storage[(index -1)-(maxSize-1-front)] = value;
+            return item;
+        }
+        return null;
     }
 
     /**
@@ -96,6 +117,7 @@ public final class CirArrayList<E> extends AbstractList<E> implements
         // todo: Students must code
         if (index < 0 || index > currentSize){
             throw new IndexOutOfBoundsException();
+            return;
         }
         if (isFull())
             resize(1);
@@ -116,10 +138,35 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      * @param value element to be inserted
      */
     private void insert(int index, E value) {
-        if (front > rear)
-            if (rear > front)
-                if (rear == front)
-                    System.out.println("ERROR");
+        if (front < rear){
+            if (rear == maxSize-1){
+                storage[0] = storage[rear];
+                rear = 0;
+                for (int i = maxSize-1; i >= front+index; i--)
+                    storage[i] = storage[i-1];
+                storage[front+index] = value;
+            }
+            else {
+                for (int i = rear+1; i >= front+index; i--)
+                    storage[i] = storage[i-1];
+                storage[front+index] = value;
+                rear++;
+            }
+        }
+        if (rear < front){
+            //todo: shift array such that you shift up from the first index
+            //then shift the ones in front of the index.
+            //ask healey about this algorithm for checking
+            if (front+index >= maxSize){
+                //only shift the front
+            }
+            else{
+                //shif front and then back
+            }
+            rear++;
+        }
+        currentSize++;
+        System.out.println("ERROR");
     }
 
     /**
@@ -128,6 +175,7 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      * @param value element to be inserted
      */
     private void addFront(E value) {
+        //doesnt need to check for empty list because addrear handles it
         if (front != 0){
             front--;
             storage[front] = value;
@@ -148,7 +196,12 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      * @param value element to be added
      */
     private void addRear(E value) {
-        if (rear != maxSize){
+        if (currentSize == 0){
+            storage[rear] = value;
+            currentSize++;
+            return;
+        }
+        if (rear != maxSize-1){
             rear++;
             storage[rear] = value;
             currentSize++;
@@ -173,14 +226,15 @@ public final class CirArrayList<E> extends AbstractList<E> implements
     @Override
     public E remove(int index) {
         // todo: Students must code
-        if (currentSize < (maxSize/4))
-            resize(0);
-        if (index >= currentSize){
+        if (index >= currentSize || index < 0){
             throw new IndexOutOfBoundsException;
             return;
         }
+        if (currentSize < (maxSize/4))
+            if (currentSize != 0)
+                resize(0);
         if (index != 0 && index != currentSize-1)
-        return removeFromMiddle(index);
+            return removeFromMiddle(int index);
         else if (index == 0)
             return removeFront();
         else if (index == currentSize-1)
@@ -199,25 +253,28 @@ public final class CirArrayList<E> extends AbstractList<E> implements
     private E removeFromMiddle(int index) {
         //todo: code such that you can insert a value at an index and shif
         // the rest of the list elements over
-        if (front > rear)
-            if (rear > front)
-                if (rear == front)
-                    System.out.println("ERROR");
+        if (front < rear)
+            if (rear < front)
+                System.out.println("ERROR");
     }
 
     /**
      * removes the element at the front of this list.
+     *
+     * @return element that was removed
      */
     private E removeFront() {
-        //todo: code such that you can remove from front and account for wrapping
-        //todo: make sure that
-        if (front != maxSize){
+        if (front != maxSize-1){
+            E item = storage[front];
             front++;
             currentSize--;
+            return item;
         }
         else {
+            E item = storage[front];
             front = 0;
             currentSize--;
+            return item;
         }
         System.out.println("ERROR");
 
@@ -225,10 +282,24 @@ public final class CirArrayList<E> extends AbstractList<E> implements
 
     /**
      * removes the element at the rear of this list.
+     *
+     * @return element that was removed
      */
     private E removeRear() {
         //todo: code such that you can remove from rear and account for wrapping
+        if (rear != 0){
+            E item = storage[rear];
+            rear--;
+            currentSize--;
+            return item;
 
+        }
+        else {
+            E item = storage[rear];
+            rear = maxSize-1;
+            currentSize--;
+            return item;
+        }
         System.out.println("ERROR");
 
     }
@@ -243,6 +314,7 @@ public final class CirArrayList<E> extends AbstractList<E> implements
     private void resize(int scale){
         //todo: code such that scale = 1 increases size by 50% and
         //scale = 1 decrases size by 50%
+        //make sure that if the list is empty that it doesnt freak
     }
 
     /**

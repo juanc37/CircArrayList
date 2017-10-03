@@ -30,9 +30,9 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      * Builds a new, empty CirArrayList.
      */
     public CirArrayList() {
-        storage = new E[DEFAULT_SIZE];
         front = rear = currentSize = 0;
         maxSize = DEFAULT_SIZE;
+        storage = new E[DEFAULT_SIZE];
     }
 
     /**
@@ -43,10 +43,10 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      */
     public CirArrayList(Collection<? extends E> col) {
         // todo: collection constructor
-        storage = new E[DEFAULT_SIZE];
         front = rear = currentSize = 0;
         maxSize = DEFAULT_SIZE;
         int i = 0;
+        storage = new E[DEFAULT_SIZE];
         for(E thing : col){
             storage[i] = thing;
         }
@@ -62,15 +62,14 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      */
     @Override
     public E get(int index) {
-        // todo: Students must code
         if (index >= currentSize || index < 0){
-            throw new IndexOutOfBoundsException;
+            throw new IndexOutOfBoundsException();
             return;
         }
         if (front < rear)
             return storage[front+index];
         if (rear < front)
-            return storage[(index -1)-(maxSize-1-front)];
+            return storage[(front+index)-maxSize];
         return null;
     }
 
@@ -86,9 +85,8 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      */
     @Override
     public E set(int index, E value) {
-        // todo: Students must code
         if (index >= currentSize || index < 0){
-            throw new IndexOutOfBoundsException;
+            throw new IndexOutOfBoundsException();
             return;
         }
         if (front < rear){
@@ -97,8 +95,8 @@ public final class CirArrayList<E> extends AbstractList<E> implements
             return item;
         }
         if (rear < front){
-            E item = storage[(index -1)-(maxSize-1-front)];
-            storage[(index -1)-(maxSize-1-front)] = value;
+            E item = storage[(front+index)-maxSize];
+            storage[(front+index)-maxSize] = value;
             return item;
         }
         return null;
@@ -142,31 +140,37 @@ public final class CirArrayList<E> extends AbstractList<E> implements
             if (rear == maxSize-1){
                 storage[0] = storage[rear];
                 rear = 0;
-                for (int i = maxSize-1; i >= front+index; i--)
+                for (int i = maxSize-1; i > front+index; i--)
                     storage[i] = storage[i-1];
                 storage[front+index] = value;
             }
             else {
-                for (int i = rear+1; i >= front+index; i--)
+                for (int i = rear+1; i > front+index; i--)
                     storage[i] = storage[i-1];
                 storage[front+index] = value;
                 rear++;
             }
         }
         if (rear < front){
-            //todo: shift array such that you shift up from the first index
-            //then shift the ones in front of the index.
-            //ask healey about this algorithm for checking
+            //todo: ask healey about this algorithm for checking
             if (front+index >= maxSize){
-                //only shift the front
+                //only shift after 0
+                for (int i = rear+1; i > ((front+index)-maxSize); i--)
+                    storage[i] = storage[i-1];
+                storage[(front+index)-maxSize] = value;
             }
             else{
                 //shif front and then back
+                for (int i = rear+1; i > 0; i--)
+                    storage[i] = storage[i-1];
+                storage[0] = storage[maxSize-1];
+                for (int i = maxSize-1; i > front+index; i--)
+                    storage[i] = storage[i-1];
+                storage[front+index] = value;
             }
             rear++;
         }
         currentSize++;
-        System.out.println("ERROR");
     }
 
     /**
@@ -187,7 +191,6 @@ public final class CirArrayList<E> extends AbstractList<E> implements
             storage[front] = value;
             currentSize++;
         }
-        System.out.println("ERROR");
     }
 
     /**
@@ -212,7 +215,6 @@ public final class CirArrayList<E> extends AbstractList<E> implements
             storage[rear] = value;
             currentSize++;
         }
-        System.out.println("ERROR");
     }
 
     /**
@@ -227,14 +229,13 @@ public final class CirArrayList<E> extends AbstractList<E> implements
     public E remove(int index) {
         // todo: Students must code
         if (index >= currentSize || index < 0){
-            throw new IndexOutOfBoundsException;
-            return;
+            throw new IndexOutOfBoundsException();
         }
         if (currentSize < (maxSize/4))
             if (currentSize != 0)
                 resize(0);
         if (index != 0 && index != currentSize-1)
-            return removeFromMiddle(int index);
+            return removeFromMiddle(index);
         else if (index == 0)
             return removeFront();
         else if (index == currentSize-1)
@@ -255,7 +256,6 @@ public final class CirArrayList<E> extends AbstractList<E> implements
         // the rest of the list elements over
         if (front < rear)
             if (rear < front)
-                System.out.println("ERROR");
     }
 
     /**
@@ -276,8 +276,6 @@ public final class CirArrayList<E> extends AbstractList<E> implements
             currentSize--;
             return item;
         }
-        System.out.println("ERROR");
-
     }
 
     /**
@@ -300,8 +298,6 @@ public final class CirArrayList<E> extends AbstractList<E> implements
             currentSize--;
             return item;
         }
-        System.out.println("ERROR");
-
     }
 
     /**

@@ -30,9 +30,9 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      * Builds a new, empty CirArrayList.
      */
     public CirArrayList() {
+        storage = new E[DEFAULT_SIZE];
         front = rear = currentSize = 0;
         maxSize = DEFAULT_SIZE;
-        storage = new E[DEFAULT_SIZE];
     }
 
     /**
@@ -43,10 +43,10 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      */
     public CirArrayList(Collection<? extends E> col) {
         // todo: collection constructor
+        storage = new E[col.size()];
         front = rear = currentSize = 0;
-        maxSize = DEFAULT_SIZE;
+        maxSize = col.size();
         int i = 0;
-        storage = new E[DEFAULT_SIZE];
         for(E thing : col){
             storage[i] = thing;
         }
@@ -64,7 +64,6 @@ public final class CirArrayList<E> extends AbstractList<E> implements
     public E get(int index) {
         if (index >= currentSize || index < 0){
             throw new IndexOutOfBoundsException();
-            return;
         }
         if (front < rear)
             return storage[front+index];
@@ -87,7 +86,6 @@ public final class CirArrayList<E> extends AbstractList<E> implements
     public E set(int index, E value) {
         if (index >= currentSize || index < 0){
             throw new IndexOutOfBoundsException();
-            return;
         }
         if (front < rear){
             E item = storage[front+index];
@@ -112,10 +110,8 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      */
     @Override
     public void add(int index, E value) {
-        // todo: Students must code
         if (index < 0 || index > currentSize){
             throw new IndexOutOfBoundsException();
-            return;
         }
         if (isFull())
             resize(1);
@@ -152,7 +148,6 @@ public final class CirArrayList<E> extends AbstractList<E> implements
             }
         }
         if (rear < front){
-            //todo: ask healey about this algorithm for checking
             if (front+index >= maxSize){
                 //only shift after 0
                 for (int i = rear+1; i > ((front+index)-maxSize); i--)
@@ -227,7 +222,6 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      */
     @Override
     public E remove(int index) {
-        // todo: Students must code
         if (index >= currentSize || index < 0){
             throw new IndexOutOfBoundsException();
         }
@@ -252,10 +246,27 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      * @return the element previously at the specified position.
      */
     private E removeFromMiddle(int index) {
-        //todo: code such that you can insert a value at an index and shif
-        // the rest of the list elements over
-        if (front < rear)
-            if (rear < front)
+        if (front < rear){
+            for (int i = front+index; i < rear; i++)
+                storage[i] = storage[i+1];
+            rear--;
+        }
+        else {
+            if (rear == 0){
+                for (int i = front+index; i < maxSize-2; i++)
+                    storage[i] = storage[i+1];
+                storage[maxSize-1] = storage[rear];
+                rear = maxSize-1;
+            }
+            else {
+                for (int i = front+index; i < maxSize-2; i++)
+                    storage[i] = storage[i+1];
+                for (int i = 0; i <rear; i++)
+                    storage[i] = storage[i+1];
+                rear--;
+            }
+        }
+        currentSize--;
     }
 
     /**
@@ -284,7 +295,6 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      * @return element that was removed
      */
     private E removeRear() {
-        //todo: code such that you can remove from rear and account for wrapping
         if (rear != 0){
             E item = storage[rear];
             rear--;
@@ -310,7 +320,17 @@ public final class CirArrayList<E> extends AbstractList<E> implements
     private void resize(int scale){
         //todo: code such that scale = 1 increases size by 50% and
         //scale = 1 decrases size by 50%
-        //make sure that if the list is empty that it doesnt freak
+        if (scale == 1){
+            if (front < rear){
+
+            }
+            else {
+
+            }
+        }
+        else{
+
+        }
     }
 
     /**

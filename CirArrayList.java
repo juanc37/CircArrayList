@@ -1,5 +1,6 @@
 package CirArray;
 
+import java.util.Iterator;
 import java.util.AbstractList;
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +22,7 @@ public final class CirArrayList<E> extends AbstractList<E> implements
     private int maxSize;
     private int front;
     private int rear;
-    private final int DEFAULT_SIZE = 100;
+    private final int DEFAULT_SIZE = 25;
 
 
     private E[] storage;
@@ -30,7 +31,8 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      * Builds a new, empty CirArrayList.
      */
     public CirArrayList() {
-        storage = new E[DEFAULT_SIZE];
+        super();
+        storage = (E[]) new Object[DEFAULT_SIZE];
         front = rear = currentSize = 0;
         maxSize = DEFAULT_SIZE;
     }
@@ -42,13 +44,12 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      * @param col the Collection from which to base
      */
     public CirArrayList(Collection<? extends E> col) {
-        // todo: collection constructor
-        storage = new E[col.size()];
+        super();
+        storage = (E[]) new Object[col.size()*2];
         front = rear = currentSize = 0;
-        maxSize = col.size();
-        int i = 0;
-        for(E thing : col){
-            storage[i] = thing;
+        maxSize = col.size()*2;
+        for (E item: col){
+            add(item);
         }
     }
 
@@ -67,7 +68,7 @@ public final class CirArrayList<E> extends AbstractList<E> implements
         }
         if (front < rear)
             return storage[front+index];
-        else{
+        if (front > rear) {
             if (front+index > maxSize-1)
                 return storage[(front+index)-maxSize];
             else
@@ -122,7 +123,6 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      */
     @Override
     public void add(int index, E value) {
-        // todo: Students must code
         if (index < 0 || index > currentSize){
             throw new IndexOutOfBoundsException();
         }
@@ -186,7 +186,6 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      * @param value element to be inserted
      */
     private void addFront(E value) {
-        //doesnt need to check for empty list because addrear handles it
         if (front != 0){
             front--;
             storage[front] = value;
@@ -232,10 +231,8 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      */
     @Override
     public E remove(int index) {
-        // todo: Students must code
         if (index >= currentSize || index < 0){
             throw new IndexOutOfBoundsException();
-            return;
         }
         if (currentSize < (maxSize/4))
             if (currentSize != 0)
@@ -300,17 +297,15 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      * @return element that was removed
      */
     private E removeFront() {
+        E item = storage[front];
         if (front != maxSize-1){
-            E item = storage[front];
             front++;
-            return item;
         }
         else {
-            E item = storage[front];
             front = 0;
-            return item;
         }
         currentSize--;
+        return item;
     }
 
     /**
@@ -319,19 +314,17 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      * @return element that was removed
      */
     private E removeRear() {
-        //todo: code such that you can remove from rear and account for wrapping
+        E item;
         if (rear != 0){
-            E item = storage[rear];
+            item = storage[rear];
             rear--;
-            return item;
-
         }
         else {
-            E item = storage[rear];
+            item = storage[rear];
             rear = maxSize-1;
-            return item;
         }
         currentSize--;
+        return item;
     }
 
     /**
@@ -342,22 +335,53 @@ public final class CirArrayList<E> extends AbstractList<E> implements
      * or down 1 yielding a bigger container and 0 yielding a smaller one
      */
     private void resize(int scale){
-        //todo: code such that scale = 1 increases size by 50% and
-        //scale = 1 decrases size by 50%
-        if (scale == 1){
-            tmp E[] = new E[maxSize+(maxSize/2)];
-            if (front < rear){
-                for (int i = 0; i < maxSize-1; i++)
-                    tmp[i] = storage[front];
-            }
-            else {
-                int tmpCounter = 0;
-                for (int i = front; i <)
-            }
-        }
-        else{
+        if (scale == 1) storage = sizeUp();
+        front = 0;
+        rear = currentSize-1;
+    }
 
+    private E[] sizeUp(){
+        E[] tmp = (E[])new Object[maxSize+(maxSize/2)];
+        if (front < rear){
+            for (int i = 0; i < maxSize-1; i++)
+                tmp[i] = storage[front];
         }
+        if (front > rear) {
+            int tmpCounter = 0;
+            for (int i = front; i < maxSize; i++){
+                tmp[tmpCounter] = storage[i];
+                tmpCounter++;
+            }
+            for (int i = 0; i <= rear; i++){
+                tmp[tmpCounter] = storage[i];
+                tmpCounter++;
+            }
+            //todo caste so that it does not get truncated.
+            maxSize = maxSize/2 + maxSize;
+        }
+        return tmp;
+    }
+    private E[] sizeDown(){
+        int tmpCounter = 0;
+        E[] tmp = (E[]) new Object[maxSize/2];
+        if (front < rear){
+            for (int i = front; i <= rear; i++){
+                tmp[tmpCounter] = storage[i];
+                tmpCounter++;
+            }
+        }
+        if (front > rear) {
+            for (int i = front; i < maxSize; i++) {
+                tmp[tmpCounter] = storage[i];
+                tmpCounter++;
+            }
+            for (int i = 0; i <= rear; i++) {
+                tmp[tmpCounter] = storage[i];
+                tmpCounter++;
+            }
+            maxSize = maxSize / 2;
+        }
+        return tmp;
     }
 
     /**

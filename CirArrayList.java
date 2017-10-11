@@ -1,4 +1,5 @@
 package CirArray;
+
 import java.util.Iterator;
 import java.util.AbstractList;
 import java.util.Collection;
@@ -97,7 +98,6 @@ public final class CirArrayList<E> extends AbstractList<E> implements
             return item;
         }
         if (rear < front) {
-            //add case so that you test before and after the wrap
             if (front + index > maxSize - 1) {
                 E item = storage[(front + index) - maxSize];
                 storage[(front + index) - maxSize] = value;
@@ -159,7 +159,6 @@ public final class CirArrayList<E> extends AbstractList<E> implements
         }
         if (rear < front) {
             if (front + index >= maxSize) {
-                //only shift after 0
                 for (int i = rear + 1; i > ((front + index) - maxSize); i--)
                     storage[i] = storage[i - 1];
                 storage[(front + index) - maxSize] = value;

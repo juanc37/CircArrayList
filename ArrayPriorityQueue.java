@@ -48,4 +48,29 @@ public final class ArrayPriorityQueue<E extends Comparable<? extends E>>
     public int size() {
         return queue.size();
     }
+
+    @Override
+    public boolean offer(E e) {
+        return false;
+    }
+
+    @Override
+    public E remove() {
+        return null;
+    }
+
+    @Override
+    public E poll() {
+        return null;
+    }
+
+    @Override
+    public E element() {
+        return null;
+    }
+
+    @Override
+    public E peek() {
+        return null;
+    }
 }

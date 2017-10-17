@@ -1,7 +1,49 @@
 package CirArray;
 
-import java.util.*;
+import java.util.AbstractCollection;
+import java.util.Queue;
+import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
+/**
+ * An array-based priority queue implementation.
+ * <p>
+ * A first-in-first-out (FIFO) data container, the basic queue represents
+ * a line arranged in the order the items arrive. This queue differs from
+ * the standard implementation in that it requires all enclosed objects
+ * support comparison with like-type objects (Comparable), and it
+ * automatically arranges the items in the queue based upon their ranking.
+ * Lower items appear closer to the queue's front than larger items.
+ * </p>
+ * Due to their nature, queues must support rapid enqueue (offer) and
+ * dequeue (poll) operations. That is, getting in and out of line must
+ * occur rapidly. In this priority queue, the poll operation shall occur
+ * in constant time, but because the queue requires arrangement, adding
+ * to the circular-array based priority queue may produce slower timings,
+ * for the data structure must use binary-search to locate where the new
+ * item belongs in relation to everything else, and it must then shift
+ * the existing contents over to make room for the addition.
+ * </p>
+ * <p>
+ * In the likely event two objects share the same priority, new items
+ * added to the queue shall appear after existing entries. When a standard
+ * priority customer enters the line, it should naturally go behind the
+ * last standard customer currently in line.
+ * </p>
+ * <p>
+ * Although technically a Collection object, the queue does not support
+ * most of the standard Collection operations. That is, one may not add
+ * or remove from the Queue using the collection methods, for it breaks
+ * the abstraction. One may, however, use a Queue object as an input
+ * parameter to any other Collection object constructor.
+ * </p>
+ *
+ * @param <E> Object to store in container. It must support comparisons with
+ *            other objects of the same type.
+ * @author Juan Candelaria Claborne, cssc0247@edoras.sdsu.edu
+ */
 public final class ArrayPriorityQueue<E extends Comparable<? extends E>>
         extends AbstractCollection<E> implements Queue<E> {
 
@@ -22,8 +64,9 @@ public final class ArrayPriorityQueue<E extends Comparable<? extends E>>
      * @param col the Collection containing the objects to add to this queue.
      */
     public ArrayPriorityQueue(Collection<? extends E> col) {
-        super();
-        queue = new CirArrayList<>(col);
+        queue = new CirArrayList<>();
+        for (E item : col)
+            offer(item);
     }
 
     /**

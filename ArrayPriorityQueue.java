@@ -92,19 +92,50 @@ public final class ArrayPriorityQueue<E extends Comparable<? extends E>>
         return queue.size();
     }
 
+    /**
+     * Inserts the specified element into this queue if it is possible to do
+     * so immediately without violating capacity restrictions. When using a
+     * capacity-restricted queue, this method is generally preferable to add
+     * (E), which can fail to insert an element only by throwing an exception.
+     *
+     * @param e the element to add
+     * @return true if element added to queue, false otherwise
+     */
     @Override
     public boolean offer(E e) {
-        return false;
+        if (queue.size() == 0){
+            queue.add(0,e);
+        }
+        else {
+            int index = getInsertionIndex(0, queue.size(), e);//todo make binary search function that handles this
+            queue.add(index, e);
+        }
+        return true;
     }
 
+    /**
+     * Retrieves and removes the head of this queue. This method differs from
+     * poll only in that it throws an exception if this queue is empty.
+     *
+     * @return the queue's head
+     * @throws java.util.NoSuchElementException if this queue is empty
+     */
     @Override
     public E remove() {
-        return null;
+        if (queue.isEmpty()) throw new NoSuchElementException();
+        return queue.remove(0);
     }
 
+    /**
+     * Retrieves and removes the head of this queue, or returns null if this
+     * queue is empty.
+     *
+     * @return this queue's head or null if this queue is empty.
+     */
     @Override
     public E poll() {
-        return null;
+        if (queue.size() == 0) return null;
+        return queue.remove(0);
     }
 
     @Override

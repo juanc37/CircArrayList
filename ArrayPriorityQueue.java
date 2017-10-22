@@ -145,6 +145,6 @@ public final class ArrayPriorityQueue<E extends Comparable<? extends E>>
 
     @Override
     public E peek() {
-        return null;
+        return queue.get(0);
     }
 }

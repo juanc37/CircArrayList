@@ -132,19 +132,54 @@ public final class ArrayPriorityQueue<E extends Comparable<? extends E>>
      *
      * @return this queue's head or null if this queue is empty.
      */
-    @Override
     public E poll() {
         if (queue.size() == 0) return null;
         return queue.remove(0);
     }
 
+    /**
+     * Retrieves, but does not remove, the head of this queue. This method
+     * differs from peek only in that it throws an exception if this queue is
+     * empty.
+     *
+     * @return the head of this queue
+     * @throws java.util.NoSuchElementException if this queue is empty
+     */
     @Override
     public E element() {
-        return null;
-    }
-
-    @Override
-    public E peek() {
+        if (queue.isEmpty()) throw new NoSuchElementException();
         return queue.get(0);
     }
+
+    /**
+     * Retrieves, but does not remove, the head of this queue, or returns
+     * null if this queue is empty.
+     *
+     * @return the head of this queue or null if this queue is empty
+     */
+    @Override
+    public E peek() {
+        if (queue.size() == 0) return null;
+        return queue.get(0);
+    }
+
+    /**
+     * binary search function to find where to insert something based on
+     * comparetos. lower valued items should come first
+     * @param min min index to search
+     * @param max max index to search
+     * @param obj object used for comparisons
+     * @return index that found to insert object at.
+     */
+    public int getInsertionIndex(int min, int max, E obj) {
+        if (max <= min)
+            return min;
+        int mid = (min + max) / 2;
+        int comp = ((Comparable<E>) obj).compareTo(queue.get(mid));
+        if (comp < 0)
+            return getInsertionIndex(min, mid, obj);
+        else
+            return getInsertionIndex(mid +1, max, obj);
+    }
 }
+

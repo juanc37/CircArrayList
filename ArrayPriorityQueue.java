@@ -1,5 +1,6 @@
 package CirArray;
 
+
 import java.util.AbstractCollection;
 import java.util.Queue;
 import java.util.List;
@@ -107,7 +108,7 @@ public final class ArrayPriorityQueue<E extends Comparable<? extends E>>
             queue.add(0,e);
         }
         else {
-            int index = getInsertionIndex(0, queue.size(), e);//todo make binary search function that handles this
+            int index = getInsertionIndex(0, queue.size(), e);
             queue.add(index, e);
         }
         return true;
@@ -132,6 +133,7 @@ public final class ArrayPriorityQueue<E extends Comparable<? extends E>>
      *
      * @return this queue's head or null if this queue is empty.
      */
+    @Override
     public E poll() {
         if (queue.size() == 0) return null;
         return queue.remove(0);

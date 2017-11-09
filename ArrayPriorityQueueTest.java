@@ -1,6 +1,7 @@
 package CirArray;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 
 public class ArrayPriorityQueueTest extends TestCase {
@@ -30,5 +31,42 @@ public class ArrayPriorityQueueTest extends TestCase {
     public void test_constructorDefault_correctInitialValues() {
         assertThat(sut.size(), is(0));
         assertNull(sut.peek());
+    }
+    public void test_constructorCollection_correctInitialValues() {
+        final List<String> testNames = TEST_NAMES.subList(0, DEFAULT_TEST_SIZE);
+        sut = new ArrayPriorityQueue<>(testNames);
+
+        assertThat(sut.size(), is(DEFAULT_TEST_SIZE));
+        assertTrue(sut.containsAll(testNames));
+    }
+
+    public void test_pollFromEmpty_returnsNull() {
+        assertNull(sut.poll());
+    }
+
+    public void test_elementFromInitiallyEmpty_exception() {
+        try {
+            sut.element();
+            fail("NoSuchElementException expected.");
+        } catch (NoSuchElementException e) {
+            assertTrue(true);
+        }
+    }
+
+    public void test_removeFromInitiallyEmpty_exception() {
+        try {
+            sut.remove();
+            fail("NoSuchElementException expected.");
+        } catch (NoSuchElementException e) {
+            assertTrue(true);
+        }
+    }
+
+    public void test_offer_containsAllItems() {
+        final List<String> testNames = TEST_NAMES.subList(0, DEFAULT_TEST_SIZE);
+        for (String item : testNames) {
+            sut.offer(item);
+        }
+        assertTrue(sut.containsAll(testNames));
     }
 }

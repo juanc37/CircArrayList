@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
+import junit.framework.*;
 
 public class ArrayPriorityQueueTest extends TestCase {
 

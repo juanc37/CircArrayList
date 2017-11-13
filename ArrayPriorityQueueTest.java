@@ -1,5 +1,6 @@
 package CirArray;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
@@ -68,5 +69,27 @@ public class ArrayPriorityQueueTest extends TestCase {
             sut.offer(item);
         }
         assertTrue(sut.containsAll(testNames));
+    }
+    public void test_priorityOrder_lowestFirst() {
+
+        // build data
+        final List<Integer> values = getSymmetricIntegers();
+        // add it to the queue
+        final Queue<Integer> priorityQueue = new ArrayPriorityQueue<>(values);
+        // verify lowest items appear first
+        Integer previous = 0;
+        for (int i = 0; i < DEFAULT_TEST_SIZE; i++) {
+            final Integer current = priorityQueue.poll();
+            assertTrue(current > previous);
+            previous = current;
+        }
+    }
+
+    private List<Integer> getSymmetricIntegers() {
+        final List<Integer> values = new ArrayList<>();
+        for (int i = DEFAULT_TEST_SIZE; i > 0; i--) {
+            values.add(values.size() >> 1, i);
+        }
+        return values;
     }
 }

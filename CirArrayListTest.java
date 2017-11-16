@@ -65,3 +65,42 @@ public class CirArrayListTest extends TestCase {
 
         return values;
     }
+    public void test_add_startEmptyEndPosition_contentsCorrect() {
+        Integer[] values = getSequentialIntArray(TEST_SIZE);
+        for (int position = 0; position < values.length; position++) {
+            sut.add(position, values[position]);
+        }
+
+        assertThat(sut.size(), is(equalTo(values.length)));
+        for (int position = 0; position < values.length; position++) {
+            assertThat(sut.get(position), is(equalTo(values[position])));
+        }
+    }
+
+    public void test_add_startEmptyFrontPosition_contentsCorrect() {
+        Integer[] values = getSequentialIntArray(TEST_SIZE);
+        for (int position = 0; position < values.length; position++) {
+            sut.add(0, values[position]);
+        }
+
+        assertThat(sut.size(), is(equalTo(values.length)));
+        Arrays.sort(values, Comparator.reverseOrder());
+        for (int position = 0; position < values.length; position++) {
+            assertThat(sut.get(position), is(equalTo(values[position])));
+        }
+    }
+
+    public void test_add_existingCollectionFrontPosition_contentsCorrect() {
+        Integer[] values = getSequentialIntArray(TEST_SIZE);
+        sut = new CirArrayList(Arrays.asList(values));
+        for (int value = TEST_SIZE - 1; value >= 0; value--) {
+            sut.add(0, value);
+        }
+
+        assertThat(sut.size(), is(equalTo(TEST_SIZE << 1)));
+        for (int position = 0; position < TEST_SIZE; position++) {
+            assertThat(sut.get(position), is(equalTo(position)));
+            assertThat(sut.get(position + TEST_SIZE), is(equalTo(position)));
+        }
+    }
+}

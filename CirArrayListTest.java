@@ -104,6 +104,89 @@ public class CirArrayListTest extends TestCase {
         }
 
     }
+    public void test_add_manySingleItems_correctContents() {
+
+        final Integer inv = VALUE_INVALID;
+
+        sut.add(VALUE_INVALID);
+        for (int i = 0; i < Integer.MAX_VALUE >> 6; i++) {
+            sut.add(inv);
+            sut.remove(0);
+        }
+        sut.remove(0);
+        sut.add(VALUE_VALID);
+
+        assertEquals(sut.size(), 1);
+        assertTrue(sut.contains(VALUE_VALID));
+        assertFalse(sut.contains(VALUE_INVALID));
+    }
+
+    public void test_remove_addTwoBackRemoveOneFront_contentsCorrect() {
+        int counter = 0;
+        for (int cycle = 0; cycle < TEST_SIZE; cycle++) {
+            sut.add(counter++);
+            sut.add(counter++);
+            sut.remove(0);
+        }
+
+        assertThat(sut.size(), is(equalTo(TEST_SIZE)));
+        for (int i = 0; i < TEST_SIZE; i++) {
+            assertFalse(sut.contains(i));
+            assertThat(sut.get(i), is(equalTo(TEST_SIZE + i)));
+        }
+    }
+
+    public void test_remove_allContents_correctRemovedElementAndSize() {
+        sut = new CirArrayList<>(Arrays.asList(getSequentialIntArray(TEST_SIZE)));
+
+        for (int count = 0; count < TEST_SIZE; count++) {
+            assertThat(sut.remove(0), is(equalTo(count)));
+            assertFalse(sut.contains(count));
+            assertThat(sut.size(), is(equalTo(TEST_SIZE - count - 1)));
+        }
+    }
+
+    public void test_set_sequentialValues_contentsCorrect() {
+        sut = new CirArrayList<>(Arrays.asList(getInvalidInitializedIntArray(TEST_SIZE)));
+        for (int count = 0; count < TEST_SIZE; count++) {
+            sut.set(count, count);
+        }
+
+        assertEquals(sut.size(), TEST_SIZE);
+        for (int count = 0; count < TEST_SIZE; count++) {
+            assertThat(sut.get(count), is(equalTo(count)));
+        }
+    }
+
+    private Integer[] getInvalidInitializedIntArray(int size) {
+        Integer[] values = new Integer[size];
+        for (int i = 0; i < size; i++)
+            values[i] = VALUE_INVALID;
+
+        return values;
+    }
+
+    public void test_remove_oddValuesFromList_nonePresent() {
+        sut = new CirArrayList<>(Arrays.asList(getSequentialIntArray(TEST_SIZE)));
+
+        sut.removeIf(integer -> integer % 2 == 1);
+
+        for (int i = 0; i < TEST_SIZE; i += 2) {
+            assertTrue(sut.contains(i));
+            assertFalse(sut.contains(i + 1));
+        }
+    }
+
+    public void test_clear_middleLeavingEnds_onlyValidItems() {
+        sut = new CirArrayList<>(Arrays.asList(getInvalidInitializedIntArray(TEST_SIZE)));
+        sut.set(0, VALUE_VALID);
+        sut.set(sut.size() - 1, VALUE_VALID);
+
+        assertTrue(sut.contains(VALUE_INVALID));
+        sut.subList(1, sut.size() - 1).clear();
+        assertFalse(sut.contains(VALUE_INVALID));
+        assertEquals(sut.size(), 2);
+    }
     public void test_set_indexOutOfBounds_exceptionThrown() {
         try {
             sut.set(-1, VALUE_IGNORE);

@@ -102,5 +102,68 @@ public class CirArrayListTest extends TestCase {
             assertThat(sut.get(position), is(equalTo(position)));
             assertThat(sut.get(position + TEST_SIZE), is(equalTo(position)));
         }
+
+    }
+    public void test_set_indexOutOfBounds_exceptionThrown() {
+        try {
+            sut.set(-1, VALUE_IGNORE);
+            fail("IndexOutOfBoundsException expected for index < 0");
+        } catch (IndexOutOfBoundsException e) {
+
+        } catch (Exception e) {
+            fail("Incorrect Exception");
+        }
+
+        try {
+            sut.set(0, VALUE_IGNORE);
+            fail("IndexOutOfBoundsException expected for == size()");
+        } catch (IndexOutOfBoundsException e) {
+
+        } catch (Exception e) {
+            fail("Incorrect Exception");
+        }
+
+        try {
+            sut.set(1, VALUE_IGNORE);
+            fail("IndexOutOfBoundsException expected for > size()");
+        } catch (IndexOutOfBoundsException e) {
+
+        } catch (Exception e) {
+            fail("Incorrect Exception");
+        }
+
+        assertTrue(true);
+    }
+
+    public void test_get_indexOutOfBounds_exceptionThrown() {
+        try {
+            sut.get(-1);
+            fail("IndexOutOfBoundsException expected for < 0");
+        } catch (IndexOutOfBoundsException e) {
+
+        } catch (Exception e) {
+            fail("Incorrect Exception");
+        }
+
+        try {
+            sut.get(0);
+            fail("IndexOutOfBoundsException expected for == size()");
+        } catch (IndexOutOfBoundsException e) {
+
+        } catch (Exception e) {
+            fail("Incorrect Exception");
+        }
+
+        try {
+            sut.get(1);
+            fail("IndexOutOfBoundsException expected for > size()");
+        } catch (IndexOutOfBoundsException e) {
+
+        } catch (Exception e) {
+            fail("Incorrect Exception");
+        }
+
+        assertTrue(true);
+
     }
 }

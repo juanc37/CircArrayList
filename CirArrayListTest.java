@@ -1,5 +1,4 @@
 package CirArray;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -65,6 +64,7 @@ public class CirArrayListTest extends TestCase {
 
         return values;
     }
+
     public void test_add_startEmptyEndPosition_contentsCorrect() {
         Integer[] values = getSequentialIntArray(TEST_SIZE);
         for (int position = 0; position < values.length; position++) {
@@ -102,8 +102,8 @@ public class CirArrayListTest extends TestCase {
             assertThat(sut.get(position), is(equalTo(position)));
             assertThat(sut.get(position + TEST_SIZE), is(equalTo(position)));
         }
-
     }
+
     public void test_add_manySingleItems_correctContents() {
 
         final Integer inv = VALUE_INVALID;
@@ -187,6 +187,7 @@ public class CirArrayListTest extends TestCase {
         assertFalse(sut.contains(VALUE_INVALID));
         assertEquals(sut.size(), 2);
     }
+
     public void test_set_indexOutOfBounds_exceptionThrown() {
         try {
             sut.set(-1, VALUE_IGNORE);

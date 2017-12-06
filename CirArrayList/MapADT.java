@@ -77,5 +77,6 @@ public interface MapADT<K extends Comparable<K>, V> {
      * @return Iterator over the values.
      */
     Iterator<V> values();
+    //todo: implement hashtable and BST
 }
 

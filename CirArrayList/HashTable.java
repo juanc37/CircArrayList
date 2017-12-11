@@ -38,16 +38,42 @@ public class HashTable<K extends Comparable<K>, V> implements MapADT<K, V> {
 
     @Override
     public boolean contains(K key) {
+        int index = getIndex(key.hashCode(), maxCapacity);
+        for (MapItem<K, V> item : storage[index])
+            if (key.compareTo((K) item.key) == 0)
+                return true;
         return false;
     }
 
     @Override
     public V add(K key, V value) {
-        return null;
+        if (currentSize >= sizeThreshold) resize();
+        V tmp = null;
+        if (contains(key)) {
+            tmp = getValue(key);
+            delete(key);
+        }
+        MapItem item = new MapItem(key, value);
+        int index = getIndex(key.hashCode(), maxCapacity);
+        storage[index].add(item);
+        currentSize++;
+        return tmp;
     }
 
     @Override
     public boolean delete(K key) {
+        if (!contains(key))
+            return false;
+        int index = getIndex(key.hashCode(), maxCapacity);
+        int count = 0;
+        for (MapItem<K, V> item : storage[index]) {
+            if (key.compareTo(item.key) == 0) {
+                storage[index].remove(count);
+                currentSize--;
+                return true;
+            }
+            count++;
+        }
         return false;
     }
 

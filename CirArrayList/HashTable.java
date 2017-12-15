@@ -79,11 +79,28 @@ public class HashTable<K extends Comparable<K>, V> implements MapADT<K, V> {
 
     @Override
     public V getValue(K key) {
-        return null;
+        V tmp = null;
+        int index = getIndex(key.hashCode(), maxCapacity);
+        for (MapItem<K,V> item : storage[index]) {
+            if (key.compareTo(item.key) == 0)
+                tmp = item.value;
+        }
+        return tmp;
     }
 
     @Override
     public K getKey(V value) {
+        if (isEmpty()) return null;
+        Iterator<V> v = values();
+        Iterator<K> k = keys();
+        K tmpK;
+        V tmpV;
+        while (k.hasNext() && v.hasNext()) {
+            tmpK = k.next();
+            tmpV = v.next();
+            if (((Comparable) tmpV).compareTo(value) == 0)
+                return tmpK;
+        }
         return null;
     }
 
@@ -111,4 +128,6 @@ public class HashTable<K extends Comparable<K>, V> implements MapADT<K, V> {
     public Iterator<V> values() {
         return null;
     }
+    //todo make mapitem wrapper class with the dictionary storage class
+    //todo make abstract iterator and extend with 2 different classes to get keyiterator and valueiterator
 }

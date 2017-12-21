@@ -106,17 +106,23 @@ public class HashTable<K extends Comparable<K>, V> implements MapADT<K, V> {
 
     @Override
     public int size() {
-        return 0;
+        return currentSize;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return (currentSize == 0);
     }
 
     @Override
     public void clear() {
-
+        storage = new LinkedList[primeSizeList[0]];
+        for (int i = 0; i < storage.length; i++) {
+            storage[i] = new LinkedList<>();
+        }
+        currentSize = 0;
+        maxCapacity = primeSizeList[0];
+        sizeThreshold = (int) (maxCapacity * .9);
     }
 
     @Override

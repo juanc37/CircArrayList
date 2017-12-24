@@ -136,4 +136,18 @@ public class HashTable<K extends Comparable<K>, V> implements MapADT<K, V> {
     }
     //todo make mapitem wrapper class with the dictionary storage class
     //todo make abstract iterator and extend with 2 different classes to get keyiterator and valueiterator
+    private class MapItem<K extends Comparable<K>, V> implements Comparable<MapItem<K, V>> {
+        public K key;
+        public V value;
+
+        public MapItem(K k, V v){
+            key = k;
+            value = v;
+        }
+
+        @Override
+        public int compareTo(MapItem o) {
+            return key.compareTo((K) o.key);
+        }
+    }
 }
